@@ -10,29 +10,50 @@ import {
   Slide,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
-import { useState } from "react";
-import Goals from "./Goals";
-import PieChart from "./PieChart";
-import CardReview from "./CardReview";
-
+import React, { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
-// Make all other buttons inactive while timer is on. Make start timer false on useEffect
-// Add timer state to redux
-// Make background of the div gradient. The percent depends on percent of completed tasks
-// All that info got to be saved in user's redux store. User info + all projects info
+import Goals from "./Goals";
+import ProjectPieChart from "./PieChart";
+import CardReview from "./CardReview";
 
-const ProjectCard = () => {
+import { appearStarAnimation } from "../additionalStuff/animations";
+import { progressColor } from "../additionalStuff/helperFunctions";
+
+const ProjectCard = (props) => {
+  const {
+    projectName,
+    description,
+    goals,
+    sessions,
+    projectId,
+    totalWorkTime,
+  } = props;
   const [tab, setTab] = useState("overall");
-
-  const data = [
-    { argument: "light", value: 5 },
-    { argument: "normal", value: 12 },
-    { argument: "fast", value: 3 },
-  ];
+  const [animate, setAnimate] = useState(false);
 
   const timerState = useSelector((state) => state.timerState.value);
+
+  const percentOfCompletion = useMemo(() => {
+    const completedGoals = goals.filter((goal) => goal.checked === true);
+    const completedPercent = (completedGoals.length / goals.length) * 100;
+    return completedPercent;
+  }, [goals]);
+
+  // React has no idea that this dependency is absolutely necessary
+  const borderShape1 = useMemo(() => {
+    return ~~(Math.random() * (95 - 5) + 5);
+  }, [goals]);
+  const borderShape2 = useMemo(() => {
+    return ~~(Math.random() * (95 - 10) + 10);
+  }, [goals]);
+
+  // To animate star only when percentOfCompletion reaches 100% and not to animate it
+  // on render when percent is already 100%, I'll pass this func to Goals component
+  // and execute it onChange of checkbox only.
+  const updateAnimate = () => {
+    percentOfCompletion === 100 && setAnimate(true);
+  };
 
   return (
     <>
@@ -47,19 +68,54 @@ const ProjectCard = () => {
             sx={{
               height: "640px",
               overflow: "hidden",
-              // background:
-              //   "linear-gradient(to bottom right, #FFE9A0 40%,  #CC3636 60%)",
+              position: "relative",
+              "&:before": {
+                backgroundColor: `${progressColor(percentOfCompletion)}`,
+                content: `""`,
+                width: "100%",
+                height: `${percentOfCompletion}%`,
+                position: "absolute",
+                right: 0,
+                bottom: 0,
+                zIndex: 1,
+                transition: "all 1s",
+                borderRadius: `${
+                  percentOfCompletion === 100
+                    ? 0
+                    : `${borderShape1}% ${borderShape2}% 0 0`
+                }`,
+              },
             }}
           >
+            <Typography
+              sx={{
+                position: "relative",
+                marginRight: "10px",
+                float: "right",
+                zIndex: 110,
+                fontSize: "30px",
+                marginTop: "5px",
+                display: "block",
+                opacity: `${percentOfCompletion === 100 ? 1 : 0}`,
+                transition: "all 1s",
+                animation: `${
+                  percentOfCompletion === 100 && animate && appearStarAnimation
+                } 2s`,
+              }}
+            >
+              ⭐
+            </Typography>
             <CardHeader
               titleTypographyProps={{
                 textAlign: "center",
                 fontFamily: "'Macondo', cursive",
                 fontWeight: 1000,
+                position: "relative",
+                zIndex: 10,
               }}
-              title="Header"
+              title={projectName}
             />
-            <CardActions>
+            <CardActions sx={{ position: "relative", zIndex: 10 }}>
               <CardActionArea
                 disabled={timerState}
                 onClick={() => {
@@ -96,35 +152,36 @@ const ProjectCard = () => {
             <CardContent>
               {tab === "info" && (
                 <Slide timeout={500} direction="left" in={true}>
-                  <Paper elevation={8} sx={{ padding: "1rem" }}>
-                    <Typography variant="h5">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                      ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    </Typography>
+                  <Paper
+                    elevation={8}
+                    sx={{
+                      padding: "1rem",
+                      position: "relative",
+                      zIndex: 10,
+                      opacity: 0.8,
+                    }}
+                  >
+                    <Typography variant="h5">{description}</Typography>
                   </Paper>
                 </Slide>
               )}
 
               {tab === "goals" && (
-                <Slide timeout={500} direction="left" in={true}>
-                  <Paper
-                    sx={{
-                      padding: "1rem",
-                    }}
-                    elevation={8}
-                  >
-                    <Goals />
-                  </Paper>
-                </Slide>
+                <Goals
+                  updateAnimate={updateAnimate}
+                  goals={goals}
+                  projectId={projectId}
+                />
               )}
-              {tab === "overall" && <CardReview />}
-              {tab === "statistics" && (
-                <Paper elevation={8}>
-                  <PieChart data={data} />
-                </Paper>
+              {tab === "overall" && (
+                <CardReview
+                  projectId={projectId}
+                  sessions={sessions}
+                  goals={goals}
+                  totalWorkTime={totalWorkTime}
+                />
               )}
+              {tab === "statistics" && <ProjectPieChart sessions={sessions} />}
             </CardContent>
           </Card>
         </Box>

@@ -1,7 +1,8 @@
-import { configureStore} from "@reduxjs/toolkit";
+import { configureStore, combineReducers} from "@reduxjs/toolkit";
 import  darkModeReducer from "./slices/darkMode";
 import timerStateReducer from "./slices/timerState"
-import { combineReducers } from "@reduxjs/toolkit";
+import userReducer from "./slices/userSlice"
+
 import {persistReducer, persistStore, FLUSH,
     REHYDRATE,
     PAUSE,
@@ -17,10 +18,11 @@ const persistConfig = {
 }
 const reducers = combineReducers({
     darkMode: darkModeReducer,
-    timerState: timerStateReducer
+    timerState: timerStateReducer,
+    loggedUserState: userReducer
 })
 
-// Persist for not to lose redux state on refesh
+// Persist stands for not to lose redux state on refesh
 
 const persistedReducer = persistReducer(persistConfig, reducers)
 

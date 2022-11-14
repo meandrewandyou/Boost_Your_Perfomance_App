@@ -7,7 +7,6 @@ import {
   MenuItem,
   Switch,
   Toolbar,
-  Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {
@@ -20,22 +19,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeMode } from "../redux/slices/darkMode";
 import { Box } from "@mui/system";
 import RegLog from "./RegLog";
+import RestoreUser from "./TestUserButton";
+import { HeaderTypography } from "../additionalStuff/styledMuiComponents";
 
 const StyledSpan = styled("span")({
   color: "black",
 });
 
-const HeaderTypography = styled(Typography)({
-  transition: `all 500ms`,
-  paddingLeft: "1em",
-  position: "absolute",
-  paddingTop: "8px",
-  cursor: "default",
-  userSelect: "none",
-});
-
 const NavBar = () => {
   const darkMode = useSelector((state) => state.darkMode.value);
+  const timerState = useSelector((state) => state.timerState.value);
   const dispatch = useDispatch();
   const [hover, setHover] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -56,7 +49,7 @@ const NavBar = () => {
         <Toolbar>
           <Box display="flex" flexGrow={1}>
             <div>
-              <IconButton onClick={handleOpenMenu}>
+              <IconButton disabled={timerState} onClick={handleOpenMenu}>
                 <AccountCircle sx={{ fontSize: "50px" }} />
               </IconButton>
               <Menu
@@ -107,11 +100,11 @@ const NavBar = () => {
                 </HeaderTypography>
               </Fade>
               <Fade timeout={700} in={!hover}>
-                <HeaderTypography variant="h3">B.Y.O.P.</HeaderTypography>
+                <HeaderTypography variant="h3">GOALS</HeaderTypography>
               </Fade>
             </Box>
           </Box>
-
+          <RestoreUser />
           <FormControlLabel
             control={
               <Switch

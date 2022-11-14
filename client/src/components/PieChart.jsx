@@ -6,18 +6,24 @@ import {
   Title,
   Legend,
 } from "@devexpress/dx-react-chart-material-ui";
+import { Paper } from "@mui/material";
 
-const PieChart = ({ data }) => {
+const ProjectPieChart = ({ sessions }) => {
   return (
     <>
-      <Chart data={data}>
-        <PieSeries valueField="value" argumentField="argument" />
-        <Title text="Visuals for sessions" />
-        <Legend />
-        <Animation />
-      </Chart>
+      <Paper
+        sx={{ position: "relative", zIndex: 10, opacity: 0.95 }}
+        elevation={8}
+      >
+        <Chart data={sessions}>
+          <PieSeries valueField="value" argumentField="argument" />
+          <Title text="Visuals for sessions" />
+          <Legend />
+          <Animation />
+        </Chart>
+      </Paper>
     </>
   );
 };
 
-export default PieChart;
+export default ProjectPieChart;
