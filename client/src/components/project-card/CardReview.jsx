@@ -2,13 +2,13 @@ import { ButtonGroup, Paper, Slide, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { timerOnOff } from "../redux/slices/timerState";
+import { timerOnOff } from "../../redux/slices/timerState";
 import Timer from "./Timer";
 
 import {
   OverallTypography,
   TimerButton,
-} from "../additionalStuff/styledMuiComponents";
+} from "../../additionalStuff/styledMuiComponents";
 
 const CardReview = ({ goals, sessions, projectId, totalWorkTime }) => {
   const dispatch = useDispatch();

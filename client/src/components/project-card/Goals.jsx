@@ -15,7 +15,7 @@ import {
 import React from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateProjects } from "../redux/slices/userSlice";
+import { updateProjects } from "../../redux/slices/userSlice";
 
 const Goals = ({ goals, projectId, updateAnimate }) => {
   const [goal, setGoal] = useState({ text: "", checked: false });

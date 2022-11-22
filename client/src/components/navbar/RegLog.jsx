@@ -8,8 +8,8 @@ import {
 
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { greetingsMessage } from "../additionalStuff/helperFunctions";
-import { RegisterFormButton } from "../additionalStuff/styledMuiComponents";
+import { greetingsMessage } from "../../additionalStuff/helperFunctions";
+import { RegisterFormButton } from "../../additionalStuff/styledMuiComponents";
 import Login from "./Login";
 import Register from "./Register";
 

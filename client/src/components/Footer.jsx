@@ -10,8 +10,6 @@ const Footer = () => {
       <Paper
         elevation={3}
         sx={{
-          position: "fixed",
-          bottom: 0,
           textAlign: "center",
           width: "100%",
           opacity: 0.9,

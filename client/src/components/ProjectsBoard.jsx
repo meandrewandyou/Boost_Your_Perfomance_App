@@ -2,7 +2,7 @@ import { Grid } from "@mui/material";
 import React from "react";
 import { useSelector } from "react-redux";
 import AddNewProject from "./AddNewProject";
-import ProjectCard from "./ProjectCard";
+import ProjectCard from "./project-card/ProjectCard";
 
 const ProjectBoard = () => {
   const loggedUserProjects = useSelector(
@@ -13,10 +13,10 @@ const ProjectBoard = () => {
     <>
       <AddNewProject />
       <Grid container>
-        <Grid lg={2} item></Grid>
-        <Grid lg={8} item>
-          <Grid container spacing={3}>
-            {loggedUserProjects.map((project, i) => (
+        <Grid xs={1} md={2} item></Grid>
+        <Grid xs={10} md={8} item>
+          <Grid justifyContent="center" container spacing={3}>
+            {loggedUserProjects.map((project) => (
               <ProjectCard
                 totalWorkTime={project.totalWorkTime}
                 projectId={project.id}
@@ -30,7 +30,7 @@ const ProjectBoard = () => {
             ))}
           </Grid>
         </Grid>
-        <Grid lg={2} item></Grid>
+        <Grid xs={1} md={2} item></Grid>
       </Grid>
     </>
   );

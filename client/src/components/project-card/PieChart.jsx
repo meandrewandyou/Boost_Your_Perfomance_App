@@ -8,6 +8,8 @@ import {
 } from "@devexpress/dx-react-chart-material-ui";
 import { Paper } from "@mui/material";
 
+// I don't like that PieChart at all, will change it to another one later.
+
 const ProjectPieChart = ({ sessions }) => {
   return (
     <>

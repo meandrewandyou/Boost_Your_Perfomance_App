@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
 import React from "react";
 import { useDispatch } from "react-redux";
-import { changeUser } from "../redux/slices/userSlice";
+import { changeUser } from "../../redux/slices/userSlice";
 
 const RestoreUser = () => {
   // Temporary component. redux-persist stores all the redux states. If smth goes wrong
@@ -95,12 +95,7 @@ const RestoreUser = () => {
 
   return (
     <>
-      <Button
-        sx={{ marginRight: "20px" }}
-        variant="contained"
-        color="error"
-        onClick={handleChangeUser}
-      >
+      <Button variant="contained" color="error" onClick={handleChangeUser}>
         Restore user.
       </Button>
     </>

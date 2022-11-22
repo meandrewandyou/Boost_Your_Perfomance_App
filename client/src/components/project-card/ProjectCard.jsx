@@ -1,6 +1,5 @@
 import {
   Card,
-  CardActionArea,
   CardActions,
   CardContent,
   CardHeader,
@@ -8,6 +7,8 @@ import {
   Paper,
   Typography,
   Slide,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useMemo, useState } from "react";
@@ -17,8 +18,10 @@ import Goals from "./Goals";
 import ProjectPieChart from "./PieChart";
 import CardReview from "./CardReview";
 
-import { appearStarAnimation } from "../additionalStuff/animations";
-import { progressColor } from "../additionalStuff/helperFunctions";
+import { appearStarAnimation } from "../../additionalStuff/animations";
+import { progressColor } from "../../additionalStuff/helperFunctions";
+import ProjectCardSelect from "./ProjectCardSelect";
+import ProjectCardActionArea from "./ProjectCardActionArea";
 
 const ProjectCard = (props) => {
   const {
@@ -32,10 +35,14 @@ const ProjectCard = (props) => {
   const [tab, setTab] = useState("overall");
   const [animate, setAnimate] = useState(false);
 
+  // Let's track MUI breakpoints to use in other components rather then Grid
+  const theme = useTheme();
+  const lg = useMediaQuery(theme.breakpoints.down("lg"));
+
   const timerState = useSelector((state) => state.timerState.value);
+  const completedGoals = goals.filter((goal) => goal.checked === true);
 
   const percentOfCompletion = useMemo(() => {
-    const completedGoals = goals.filter((goal) => goal.checked === true);
     const completedPercent = (completedGoals.length / goals.length) * 100;
     return completedPercent;
   }, [goals]);
@@ -51,13 +58,18 @@ const ProjectCard = (props) => {
   // To animate star only when percentOfCompletion reaches 100% and not to animate it
   // on render when percent is already 100%, I'll pass this func to Goals component
   // and execute it onChange of checkbox only.
+
   const updateAnimate = () => {
-    percentOfCompletion === 100 && setAnimate(true);
+    goals.length - completedGoals.length === 1 && setAnimate(true);
+  };
+
+  const handleSetTab = (e) => {
+    setTab(e.target.value);
   };
 
   return (
     <>
-      <Grid item xs={12} lg={6}>
+      <Grid item xs={10} sm={8} md={6}>
         <Box
           sx={{
             margin: "30px 0 30px 0",
@@ -66,7 +78,7 @@ const ProjectCard = (props) => {
           <Card
             elevation={8}
             sx={{
-              height: "640px",
+              height: "650px",
               overflow: "hidden",
               position: "relative",
               "&:before": {
@@ -115,39 +127,21 @@ const ProjectCard = (props) => {
               }}
               title={projectName}
             />
-            <CardActions sx={{ position: "relative", zIndex: 10 }}>
-              <CardActionArea
-                disabled={timerState}
-                onClick={() => {
-                  setTab("overall");
-                }}
-              >
-                Overall
-              </CardActionArea>
-              <CardActionArea
-                disabled={timerState}
-                onClick={() => {
-                  setTab("statistics");
-                }}
-              >
-                Statistics
-              </CardActionArea>
-              <CardActionArea
-                disabled={timerState}
-                onClick={() => {
-                  setTab("goals");
-                }}
-              >
-                Goals
-              </CardActionArea>
-              <CardActionArea
-                disabled={timerState}
-                onClick={() => {
-                  setTab("info");
-                }}
-              >
-                Description
-              </CardActionArea>
+            <CardActions
+              sx={{ position: "relative", zIndex: 10, padding: "4px" }}
+            >
+              {lg ? (
+                <ProjectCardSelect
+                  tab={tab}
+                  handleSetTab={handleSetTab}
+                  timerState={timerState}
+                />
+              ) : (
+                <ProjectCardActionArea
+                  timerState={timerState}
+                  handleSetTab={handleSetTab}
+                />
+              )}
             </CardActions>
             <CardContent>
               {tab === "info" && (

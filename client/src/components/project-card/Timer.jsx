@@ -2,13 +2,13 @@ import React, { useMemo } from "react";
 import { Box, ButtonGroup, IconButton, Typography } from "@mui/material";
 import { useTimer } from "react-timer-hook";
 import { useDispatch, useSelector } from "react-redux";
-import { timerOnOff } from "../redux/slices/timerState";
-import { updateProjects } from "../redux/slices/userSlice";
+import { timerOnOff } from "../../redux/slices/timerState";
+import { updateProjects } from "../../redux/slices/userSlice";
 import {
   PauseCircleFilledOutlined,
   PlayCircleFilledOutlined,
 } from "@mui/icons-material";
-import { thatHappensInTheEndOfSession } from "../additionalStuff/helperFunctions";
+import { thatHappensInTheEndOfSession } from "../../additionalStuff/helperFunctions";
 
 const Timer = ({ expiryTimestamp, sessions, projectId, progressBarColor }) => {
   const sessionLength = useMemo(() => {

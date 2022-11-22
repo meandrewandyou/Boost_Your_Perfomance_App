@@ -3,13 +3,13 @@ const bell = new Audio(sound)
 const progressColor = (percentOfCompletion) => {
     switch (true) {
       case percentOfCompletion < 30:
-        return "#F24A72";
+        return "rgba(242, 74, 114, 0.5)";
       case percentOfCompletion >= 30 && percentOfCompletion < 60:
-        return "#FD5D5D";
+        return "rgba(253, 93, 93, 0.55)";
       case percentOfCompletion >= 60 && percentOfCompletion < 99:
-        return "#8479E1";
+        return "rgba(132, 121, 225, 0.6)";
       case percentOfCompletion === 100:
-        return "#6FEDD6";
+        return "rgba(111, 237, 214, 0.65)";
       default:
         break;
     }

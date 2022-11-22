@@ -1,6 +1,6 @@
 import React from "react";
 import { FormControl, TextField, Tooltip, Typography } from "@mui/material";
-import { RegisterFormButton } from "../additionalStuff/styledMuiComponents";
+import { RegisterFormButton } from "../../additionalStuff/styledMuiComponents";
 
 const Register = () => {
   return (

@@ -8,6 +8,8 @@ import {
   DialogTitle,
   TextField,
   Tooltip,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import React, { useState } from "react";
 import { RegisterFormButton } from "../additionalStuff/styledMuiComponents";
@@ -16,7 +18,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateProjects } from "../redux/slices/userSlice";
 
 const AddNewProject = () => {
-  const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const dummyProject = {
     projectName: "",
@@ -32,7 +33,12 @@ const AddNewProject = () => {
     totalWorkTime: 0,
   };
 
+  const theme = useTheme();
+  const sm = useMediaQuery(theme.breakpoints.down("sm"));
+
   const [project, setProject] = useState(dummyProject);
+  const [open, setOpen] = useState(false);
+
   const loggedUserProjects = useSelector(
     (state) => state.loggedUserState.projects
   );
@@ -40,6 +46,7 @@ const AddNewProject = () => {
   const setProjectName = (e) => {
     const projectName = e.target.value;
     setProject({ ...project, projectName });
+    console.log(e.target);
   };
 
   const setProjectDescription = (e) => {
@@ -60,7 +67,7 @@ const AddNewProject = () => {
           sx={{
             position: "fixed",
             top: "100px",
-            right: "40px",
+            right: `${sm ? 0 : "40px"}`,
             marginLeft: "auto",
             boxShadow: 3,
             transition: "all 300ms",
@@ -91,8 +98,8 @@ const AddNewProject = () => {
           }}
         >
           <DialogContentText>
-            Think about next thing you're going to work on, describe it, set few
-            first goals.
+            Think about next thing you're going to work on, give it a
+            description.
           </DialogContentText>
           <form
             id="add-goal"
