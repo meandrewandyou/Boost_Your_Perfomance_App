@@ -2,6 +2,7 @@ import { AccountCircle } from "@mui/icons-material";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const UserLoginMenu = ({ clicked, setClicked }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -38,10 +39,13 @@ const UserLoginMenu = ({ clicked, setClicked }) => {
           horizontal: "right",
         }}
       >
-        <MenuItem sx={{ "Mui-selected": { backgroundColor: "red" } }}>
+        <MenuItem component={Link} to={"/user_info"}>
           Profile
         </MenuItem>
-        <MenuItem>Projects</MenuItem>
+
+        <MenuItem component={Link} to={"/project_board"}>
+          Projects
+        </MenuItem>
         <MenuItem>Log out</MenuItem>
         <MenuItem
           onClick={() => {

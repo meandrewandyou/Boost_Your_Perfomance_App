@@ -1,12 +1,9 @@
 import { CssBaseline, ThemeProvider} from "@mui/material";
 import React from "react";
 import { useSelector } from "react-redux";
-
-
-import Footer from "./components/Footer";
-import ProjectBoard from "./components/ProjectsBoard";
 import { themeDark, themeLight } from "./additionalStuff/styledMuiComponents";
-import NavBar from "./components/navbar/NavBar";
+import { RouterProvider } from "react-router-dom";
+import router from "./router/router"
 
 
 
@@ -17,9 +14,7 @@ function App() {
   return (
   <ThemeProvider theme={darkMode ? themeDark : themeLight}>
     <CssBaseline/>
-    <NavBar/>
-    <ProjectBoard/>
-    <Footer/>
+    <RouterProvider router={router}/>
   </ThemeProvider>
   )
   

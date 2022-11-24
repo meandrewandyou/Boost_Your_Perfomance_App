@@ -73,7 +73,10 @@ const themeDark = createTheme({
     },
     MuiCssBaseline: {
       styleOverrides: { body: {
+        height: "100%",
         width: "100%",
+        margin: 0,
+        padding: 0,
         boxSizing: "border-box",
         backgroundImage: `url(${darkImage})`,
         backgroundRepeat: "no-repeat",
@@ -82,7 +85,10 @@ const themeDark = createTheme({
       "&::-webkit-scrollbar, & *::-webkit-scrollbar": {
         width: "0px",
       },
-      }}       
+      },
+    html: {
+      height: "100%"
+    }}       
     },
     MuiCardActionArea: { 
     styleOverrides: {

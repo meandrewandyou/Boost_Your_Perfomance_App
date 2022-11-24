@@ -55,11 +55,11 @@ const CardReview = ({ goals, sessions, projectId, totalWorkTime }) => {
             {`Achieved/total goals: ${completedGoals.length}/${goals.length}`}
           </OverallTypography>
           <OverallTypography variant="h5">
-            {`Total work time: ${totalWorkTime}s`}{" "}
+            {`Total work time: ${totalWorkTime}s`}
           </OverallTypography>
-          <Box spacing={3} sx={{ textAlign: "center", padding: "20px" }}>
+          <Box spacing={3} sx={{ textAlign: "center" }}>
             <Typography>Start work session</Typography>
-            <ButtonGroup>
+            <ButtonGroup sx={{ margin: "10px 0 20px 0" }}>
               <TimerButton
                 hoverColor="#9BCB66"
                 disabled={timerState}
