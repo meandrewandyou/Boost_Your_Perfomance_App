@@ -86,13 +86,13 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     addGoal: (state, action) => [...state.goals, action.payload],
-    changeUser: (state, action) => action.payload,
+    setUser: (state, action) => action.payload,
     updateProjects: (state, action) => {
       state.projects = action.payload;
     },
   },
 });
 
-export const { addGoal, changeUser, updateProjects } = userSlice.actions;
+export const { addGoal, setUser, updateProjects } = userSlice.actions;
 
 export default userSlice.reducer;

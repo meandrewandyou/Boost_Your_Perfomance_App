@@ -25,7 +25,7 @@ const ProjectBoard = () => {
                 projectName={project.projectName}
                 description={project.description}
                 sessions={project.sessions}
-                key={project.id}
+                key={project._id}
               />
             ))}
           </Grid>

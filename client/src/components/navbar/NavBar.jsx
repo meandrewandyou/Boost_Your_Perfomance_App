@@ -1,9 +1,9 @@
 import { AppBar, Toolbar, Box, useTheme, useMediaQuery } from "@mui/material";
 import React, { useState } from "react";
-import RegLog from "./RegLog";
+import RegLog from "./reglog/RegLog";
 import RestoreUser from "./TestUserButton";
 import NavBarTitle from "./NavBarTitle";
-import UserLoginMenu from "./UserLoginMenu";
+import UserLoginMenu from "./reglog/UserLoginMenu";
 import DropdownMenu from "./DropdownMenu";
 import ThemeSwitcher from "./ThemeSwitcher";
 

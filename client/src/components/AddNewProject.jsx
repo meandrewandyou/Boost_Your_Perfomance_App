@@ -1,10 +1,8 @@
-import { AddBox } from "@mui/icons-material";
+import { AddBox, Check } from "@mui/icons-material";
 import {
   ButtonBase,
-  ButtonGroup,
   Dialog,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   TextField,
   Tooltip,
@@ -12,58 +10,80 @@ import {
   useTheme,
 } from "@mui/material";
 import React, { useState } from "react";
-import { RegisterFormButton } from "../additionalStuff/styledMuiComponents";
-import uuid from "react-uuid";
 import { useDispatch, useSelector } from "react-redux";
 import { updateProjects } from "../redux/slices/userSlice";
+import {
+  addButtonSpinBackwards,
+  addButtonSpinForwards,
+} from "../additionalStuff/animations";
+import axios from "axios";
+import StatusMessage from "./navbar/reglog/StatusMessage";
+import SubmitButton from "./navbar/reglog/SubmitButton";
 
 const AddNewProject = () => {
   const dispatch = useDispatch();
-  const dummyProject = {
-    projectName: "",
-    id: uuid(),
-    description: "",
-    goals: [],
-    subProjects: [],
-    sessions: [
-      { argument: "Medium", value: 0, seconds: 10 },
-      { argument: "Long", value: 0, seconds: 15 },
-      { argument: "Short", value: 0, seconds: 5 },
-    ],
-    totalWorkTime: 0,
-  };
-
   const theme = useTheme();
+
+  const loggedUser = useSelector((state) => state.loggedUserState.userName);
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
-
-  const [project, setProject] = useState(dummyProject);
+  const [project, setProject] = useState({ projectName: "", description: "" });
   const [open, setOpen] = useState(false);
+  const [animateButton, setAimateButton] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [statusMessage, setStatusMessage] = useState({
+    text: "What are you going to work on?",
+    color: "default",
+  });
 
-  const loggedUserProjects = useSelector(
-    (state) => state.loggedUserState.projects
-  );
-
-  const setProjectName = (e) => {
-    const projectName = e.target.value;
-    setProject({ ...project, projectName });
-    console.log(e.target);
+  const handleSetProject = (e) => {
+    const { name, value } = e.target;
+    setProject({ ...project, [name]: value });
   };
 
-  const setProjectDescription = (e) => {
-    const description = e.target.value;
-    setProject({ ...project, description });
-  };
+  const addProject = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post("user/addProject", {
+        loggedUser,
+        project,
+      });
 
-  const addProject = () => {
-    const updatedProjects = [...loggedUserProjects, project];
-    dispatch(updateProjects(updatedProjects));
+      if (response && response.status === 200) {
+        dispatch(updateProjects(response.data));
+        setLoading(false);
+        setStatusMessage({
+          text: "Success!",
+          color: "green",
+        });
+        setTimeout(() => {
+          setOpen(false);
+        }, 1000);
+      }
+    } catch (err) {
+      if (!err.response) {
+        setLoading(false);
+        setStatusMessage({
+          text: "No response from the server or something wrong with your internet connection",
+          color: "red",
+        });
+      } else {
+        setLoading(false);
+        setStatusMessage({
+          text: err.response.data,
+          color: "red",
+        });
+      }
+    }
   };
 
   return (
     <>
       <Tooltip title="Add new project to work on">
         <ButtonBase
-          onClick={() => setOpen(true)}
+          onClick={() => {
+            setAimateButton(true);
+            setOpen(true);
+          }}
           sx={{
             position: "fixed",
             top: "100px",
@@ -72,9 +92,11 @@ const AddNewProject = () => {
             boxShadow: 3,
             transition: "all 300ms",
             borderRadius: "10px",
-            "&:hover": {
-              boxShadow: 7,
-            },
+            animation: `${
+              animateButton
+                ? `${addButtonSpinForwards} 1s forwards`
+                : `${addButtonSpinBackwards} 1s`
+            }`,
           }}
         >
           <AddBox
@@ -89,18 +111,18 @@ const AddNewProject = () => {
       <Dialog
         sx={{ textAlign: "center", alignContent: "center" }}
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {
+          setOpen(false);
+          setAimateButton(false);
+        }}
       >
         <DialogTitle>Add new project</DialogTitle>
         <DialogContent
           sx={{
-            width: "450px",
+            width: `${sm ? "80vw" : "450px"}`,
           }}
         >
-          <DialogContentText>
-            Think about next thing you're going to work on, give it a
-            description.
-          </DialogContentText>
+          <StatusMessage loading={loading} message={statusMessage} />
           <form
             id="add-goal"
             onSubmit={(e) => {
@@ -109,37 +131,33 @@ const AddNewProject = () => {
             }}
           >
             <TextField
+              name="projectName"
               onChange={(e) => {
-                setProjectName(e);
+                handleSetProject(e);
               }}
               value={project.projectName}
               sx={{ margin: "20px 0" }}
               fullWidth
               required
               label="Project Name"
+              inputProps={{ maxLength: 20 }}
             />
             <TextField
+              name="description"
               onChange={(e) => {
-                setProjectDescription(e);
+                handleSetProject(e);
               }}
-              value={project.descriprion}
+              value={project.description}
               sx={{ margin: "20px 0" }}
               fullWidth
               required
               label="Description"
               multiline
               rows={4}
+              inputProps={{ maxLength: 200 }}
             />
+            <SubmitButton loading={loading} content={<Check />} />
           </form>
-          <ButtonGroup sx={{ width: "35%" }}>
-            <RegisterFormButton
-              type="sublit"
-              variant="contained"
-              form="add-goal"
-            >
-              <AddBox />
-            </RegisterFormButton>
-          </ButtonGroup>
         </DialogContent>
       </Dialog>
     </>

@@ -4,12 +4,14 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { greetingsMessage } from "../../additionalStuff/helperFunctions";
-import { RegisterFormButton } from "../../additionalStuff/styledMuiComponents";
+import { greetingsMessage } from "../../../additionalStuff/helperFunctions";
+import { RegisterFormButton } from "../../../additionalStuff/styledMuiComponents";
 import Login from "./Login";
 import Register from "./Register";
 
@@ -21,6 +23,8 @@ const RegLog = (props) => {
   useEffect(() => {
     setGreetingsText(greetingsMessage());
   }, [registerTab]);
+  const theme = useTheme();
+  const sm = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <>
@@ -33,7 +37,7 @@ const RegLog = (props) => {
       >
         <DialogContent
           sx={{
-            width: "450px",
+            width: `${sm ? "80vw" : "450px"}`,
             textAlign: "center",
           }}
         >
@@ -64,7 +68,7 @@ const RegLog = (props) => {
               Log in
             </RegisterFormButton>
           </DialogActions>
-          {registerTab ? <Register /> : <Login />}
+          {registerTab ? <Register /> : <Login setClicked={setClicked} />}
         </DialogContent>
       </Dialog>
     </>

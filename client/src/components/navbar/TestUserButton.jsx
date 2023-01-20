@@ -1,19 +1,19 @@
 import { Button } from "@mui/material";
 import React from "react";
 import { useDispatch } from "react-redux";
-import { changeUser } from "../../redux/slices/userSlice";
+import { setUser } from "../../redux/slices/userSlice";
 
 const RestoreUser = () => {
   // Temporary component. redux-persist stores all the redux states. If smth goes wrong
   // , just update user here and use the button in the NavBar
-  const newUserData = {
+  const testUserData = {
     userName: "User1",
     accessToken: "",
     projects: [
       {
         projectName: "Project1",
         id: 1,
-        description: "Loperm Ipsum",
+        description: "Lorem Ipsum",
         goals: [
           { text: "Add some feature", checked: false },
           { text: "Beautify", checked: false },
@@ -32,7 +32,7 @@ const RestoreUser = () => {
       {
         projectName: "Project2",
         id: 2,
-        description: "Loperm Ipsum",
+        description: "Lorem Ipsum",
         goals: [
           { text: "Add some feature", checked: true },
           { text: "Beautify", checked: true },
@@ -49,7 +49,7 @@ const RestoreUser = () => {
       {
         projectName: "Project3",
         id: 3,
-        description: "Loperm Ipsum",
+        description: "Lorem Ipsum",
         goals: [
           { text: "Add some feature", checked: true },
           { text: "Beautify", checked: true },
@@ -67,7 +67,7 @@ const RestoreUser = () => {
       },
       {
         projectName: "Project4",
-        description: "Loperm Ipsum",
+        description: "Lorem Ipsum",
         id: 4,
         goals: [
           { text: "Add some feature", checked: false },
@@ -90,7 +90,7 @@ const RestoreUser = () => {
   const dispatch = useDispatch();
 
   const handleChangeUser = () => {
-    dispatch(changeUser(newUserData));
+    dispatch(setUser(testUserData));
   };
 
   return (

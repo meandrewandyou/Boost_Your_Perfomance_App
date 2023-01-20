@@ -1,0 +1,28 @@
+{
+  "name": "goals_backend",
+  "version": "1.0.0",
+  "description": "Track your actual work time. Work smart.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meandrewandyou/Boost_Your_Perfomance_App.git"
+  },
+  "author": "Andrei Zelinskii",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/meandrewandyou/Boost_Your_Perfomance_App/issues"
+  },
+  "homepage": "https://github.com/meandrewandyou/Boost_Your_Perfomance_App#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^6.7.3",
+    "validator": "^13.7.0"
+  },
+  "type": "module"
+}
