@@ -22,8 +22,11 @@ const ProjectCardSelect = (props) => {
         <MenuItem value="goals" disabled={timerState}>
           Goals
         </MenuItem>
-        <MenuItem value="info" disabled={timerState}>
+        <MenuItem value="description" disabled={timerState}>
           Description
+        </MenuItem>
+        <MenuItem value="note" disabled={timerState}>
+          Note
         </MenuItem>
       </Select>
     </>

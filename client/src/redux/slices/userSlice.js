@@ -85,14 +85,40 @@ const userSlice = createSlice({
   name: "loggedUserState",
   initialState,
   reducers: {
-    addGoal: (state, action) => [...state.goals, action.payload],
+    setGoals: (state, action) => {
+      state.projects[action.payload.index].goals = action.payload.goals;
+    },
+    checkGoal: (state, action) => {
+      state.projects[action.payload.projectIndex].goals[
+        action.payload.goalIndex
+      ].checked =
+        !state.projects[action.payload.projectIndex].goals[
+          action.payload.goalIndex
+        ].checked;
+    },
     setUser: (state, action) => action.payload,
     updateProjects: (state, action) => {
       state.projects = action.payload;
     },
+    addSession: (state, action) => {
+      state.projects[action.payload.projectIndex].sessions[
+        action.payload.sessionIndex
+      ].value = action.payload.newValue;
+    },
+    editText: (state, action) => {
+      state.projects[action.payload.projectIndex][action.payload.tab] =
+        action.payload.editedText;
+    },
   },
 });
 
-export const { addGoal, setUser, updateProjects } = userSlice.actions;
+export const {
+  setGoals,
+  setUser,
+  updateProjects,
+  checkGoal,
+  addSession,
+  editText,
+} = userSlice.actions;
 
 export default userSlice.reducer;

@@ -16,17 +16,17 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/user/", userRoute);
 
-const start = async () => {
-  try {
-    await mongoose.connect(DB_CONNECTION_PATH, {
+const start = () => {
+  mongoose
+    .connect(DB_CONNECTION_PATH, {
       dbName: "Goals",
-    });
-    app.listen(PORT, () => {
-      console.log(`Server started on port ${PORT}`);
-    });
-  } catch (err) {
-    console.log(err.message);
-  }
+    })
+    .then(() =>
+      app.listen(PORT, () => {
+        console.log(`Server started on port ${PORT}`);
+      })
+    )
+    .catch((err) => console.log(err.message));
 };
 
 start();

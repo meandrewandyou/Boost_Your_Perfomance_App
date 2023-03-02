@@ -9,6 +9,10 @@ const ProjectBoard = () => {
     (state) => state.loggedUserState.projects
   );
 
+  const sortedProjects = [...loggedUserProjects].sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
+
   return (
     <>
       <AddNewProject />
@@ -16,16 +20,17 @@ const ProjectBoard = () => {
         <Grid xs={1} md={2} item></Grid>
         <Grid xs={10} md={8} item>
           <Grid justifyContent="center" container spacing={3}>
-            {loggedUserProjects.map((project) => (
+            {sortedProjects.map((project) => (
               <ProjectCard
                 totalWorkTime={project.totalWorkTime}
-                projectId={project.id}
+                projectId={project._id}
                 subProjects={project.subprojects}
                 goals={project.goals}
                 projectName={project.projectName}
                 description={project.description}
                 sessions={project.sessions}
                 key={project._id}
+                note={project.note}
               />
             ))}
           </Grid>

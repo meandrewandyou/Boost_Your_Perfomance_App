@@ -1,4 +1,4 @@
-import { Button, createTheme, Typography } from "@mui/material";
+import { Button, createTheme, TextField, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import darkImage from "./pics/night_forest.jpg";
 import lightImage from "./pics/desert.jpg";
@@ -171,6 +171,12 @@ const RegisterFormButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.main,
 }));
 
+const EditableTextInput = styled(TextField)(({ theme }) => ({
+  "& .MuiInputBase-input.Mui-disabled": {
+    WebkitTextFillColor: theme.palette.text.primary,
+  },
+}));
+
 const OverallTypography = styled(Typography)(({ theme }) => ({
   margin: "5px 0 5px 10px",
   color: theme.palette.primary.main,
@@ -193,4 +199,5 @@ export {
   HeaderTypography,
   themeLight,
   themeDark,
+  EditableTextInput,
 };

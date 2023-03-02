@@ -1,3 +1,7 @@
+import axios from "axios";
+import { setAlert } from "../redux/slices/sessionAlert";
+import { timerOnOff } from "../redux/slices/timerState";
+import { addSession } from "../redux/slices/userSlice";
 import sound from "./sounds/bell.wav";
 const bell = new Audio(sound);
 const progressColor = (percentOfCompletion) => {
@@ -33,44 +37,41 @@ const greetingsMessage = () => {
   }
 };
 
-const thatHappensInTheEndOfSession = (
-  sessions,
+const thatHappensInTheEndOfSession = async (
   sessionLength,
   loggedUserProjects,
   projectId,
   dispatch,
-  timerOnOff,
-  updateProjects
+  loggedUser
 ) => {
-  bell.play();
-
-  const updatedSessions = sessions.map((session) =>
-    session.seconds === sessionLength
-      ? { ...session, value: session.value + 1 }
-      : session
+  const projectIndex = loggedUserProjects.findIndex(
+    (project) => project._id === projectId
   );
+  try {
+    const response = await axios.post("user/addSession", {
+      loggedUser,
+      projectId,
+      sessionLength,
+    });
 
-  const updatedProjects = loggedUserProjects.map((project) =>
-    project.id === projectId
-      ? {
-          ...project,
-          totalWorkTime: project.totalWorkTime + sessionLength,
-          sessions: updatedSessions,
-        }
-      : project
-  );
-
-  // Here's timout to give the progress bar chance to reach 100% before state updates
-  // and timer component dissapears
-
-  setTimeout(() => {
-    dispatch(updateProjects(updatedProjects));
+    if (response && response.status === 200) {
+      await bell.play();
+      dispatch(timerOnOff(false));
+      dispatch(
+        addSession({
+          projectIndex,
+          sessionIndex: response.data.currentSessionIndex,
+          newValue: response.data.value,
+        })
+      );
+      dispatch(setAlert(true));
+    }
+  } catch (err) {
     dispatch(timerOnOff(false));
-
-    window.alert(
-      "The session is done! Stop working. Make a note where you've stopped. Make some notes for upcoming sessions if necessary. Take a brake."
-    );
-  }, 1000);
+    err.response
+      ? window.alert(err.response.data)
+      : window.alert("Check your internet connection");
+  }
 };
 
 export { progressColor, greetingsMessage, thatHappensInTheEndOfSession };

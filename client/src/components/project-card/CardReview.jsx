@@ -10,7 +10,7 @@ import {
   TimerButton,
 } from "../../additionalStuff/styledMuiComponents";
 
-const CardReview = ({ goals, sessions, projectId, totalWorkTime }) => {
+const CardReview = ({ goals, projectId, totalWorkTime }) => {
   const dispatch = useDispatch();
 
   const [expiryTimestamp, setExpiryTimestamp] = useState();
@@ -26,7 +26,7 @@ const CardReview = ({ goals, sessions, projectId, totalWorkTime }) => {
     dispatch(timerOnOff(true));
     // Look, we need 2 states of timer. One global - to disable all the buttons while timer is on
     // and one local, to render timer component only on selected card.
-    // Timeout is to make sure global state updates first. Why? Take a look at useEffect
+    // Timeout is to make sure global state updates first.
     setTimeout(() => {
       setTimerOnCurrentCard(true);
     }, 100);
@@ -93,7 +93,6 @@ const CardReview = ({ goals, sessions, projectId, totalWorkTime }) => {
             </ButtonGroup>
             {timerOnCurrentCard && timerState && (
               <Timer
-                sessions={sessions}
                 projectId={projectId}
                 expiryTimestamp={expiryTimestamp}
                 progressBarColor={progressBarColor}

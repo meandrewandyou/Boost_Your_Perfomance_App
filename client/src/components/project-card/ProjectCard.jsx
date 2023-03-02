@@ -4,9 +4,7 @@ import {
   CardContent,
   CardHeader,
   Grid,
-  Paper,
   Typography,
-  Slide,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -22,6 +20,7 @@ import { appearStarAnimation } from "../../additionalStuff/animations";
 import { progressColor } from "../../additionalStuff/helperFunctions";
 import ProjectCardSelect from "./ProjectCardSelect";
 import ProjectCardActionArea from "./ProjectCardActionArea";
+import EditableText from "./EditableText";
 
 const ProjectCard = (props) => {
   const {
@@ -31,6 +30,7 @@ const ProjectCard = (props) => {
     sessions,
     projectId,
     totalWorkTime,
+    note,
   } = props;
   const [tab, setTab] = useState("overall");
   const [animate, setAnimate] = useState(false);
@@ -128,7 +128,13 @@ const ProjectCard = (props) => {
               title={projectName}
             />
             <CardActions
-              sx={{ position: "relative", zIndex: 10, padding: "4px" }}
+              sx={{
+                position: "relative",
+                zIndex: 10,
+                padding: "4px",
+                overflowY: "auto",
+                margin: "0 5px",
+              }}
             >
               {lg ? (
                 <ProjectCardSelect
@@ -144,20 +150,12 @@ const ProjectCard = (props) => {
               )}
             </CardActions>
             <CardContent>
-              {tab === "info" && (
-                <Slide timeout={500} direction="left" in={true}>
-                  <Paper
-                    elevation={8}
-                    sx={{
-                      padding: "1rem",
-                      position: "relative",
-                      zIndex: 10,
-                      opacity: 0.8,
-                    }}
-                  >
-                    <Typography variant="h5">{description}</Typography>
-                  </Paper>
-                </Slide>
+              {tab === "description" && (
+                <EditableText
+                  tab={tab}
+                  projectId={projectId}
+                  value={description}
+                />
               )}
 
               {tab === "goals" && (
@@ -170,12 +168,14 @@ const ProjectCard = (props) => {
               {tab === "overall" && (
                 <CardReview
                   projectId={projectId}
-                  sessions={sessions}
                   goals={goals}
                   totalWorkTime={totalWorkTime}
                 />
               )}
               {tab === "statistics" && <ProjectPieChart sessions={sessions} />}
+              {tab === "note" && (
+                <EditableText tab={tab} projectId={projectId} value={note} />
+              )}
             </CardContent>
           </Card>
         </Box>

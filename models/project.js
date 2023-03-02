@@ -1,4 +1,5 @@
 import { model, Schema } from "mongoose";
+import Goal from "./goal.js";
 
 const projectSchema = new Schema(
   {
@@ -6,14 +7,13 @@ const projectSchema = new Schema(
       type: "String",
       maxLength: 20,
       required: true,
-      unique: true,
     },
     description: {
       type: "String",
       maxLength: 200,
       required: true,
     },
-    // goals: [Goal.schema],
+    goals: [Goal.schema],
     sessions: {
       type: Array,
       default: [
@@ -27,7 +27,14 @@ const projectSchema = new Schema(
       min: 0,
       default: 0,
     },
+    userId: String,
+    note: {
+      type: String,
+      default: "Edit me",
+      maxLength: 200,
+    },
   },
+
   { timestamps: true }
 );
 

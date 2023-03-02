@@ -33,13 +33,22 @@ const ProjectCardActionArea = (props) => {
         Goals
       </CardActionArea>
       <CardActionArea
-        value="info"
+        value="description"
         disabled={timerState}
         onClick={(e) => {
           handleSetTab(e);
         }}
       >
         Description
+      </CardActionArea>
+      <CardActionArea
+        value="note"
+        disabled={timerState}
+        onClick={(e) => {
+          handleSetTab(e);
+        }}
+      >
+        Note
       </CardActionArea>
     </>
   );

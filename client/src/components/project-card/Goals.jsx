@@ -1,71 +1,62 @@
-import { Check, DeleteForever } from "@mui/icons-material";
 import {
   TextField,
-  InputAdornment,
-  IconButton,
   List,
-  ListItem,
-  Checkbox,
-  ButtonBase,
-  Box,
-  Tooltip,
   Slide,
   Paper,
+  CircularProgress,
+  FormControl,
 } from "@mui/material";
+import axios from "axios";
 import React from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateProjects } from "../../redux/slices/userSlice";
+import { RegisterFormButton } from "../../additionalStuff/styledMuiComponents";
+import { setGoals } from "../../redux/slices/userSlice";
+import GoalsListItem from "./GoalsListItem";
 
 const Goals = ({ goals, projectId, updateAnimate }) => {
-  const [goal, setGoal] = useState({ text: "", checked: false });
+  const [goal, setGoal] = useState({ text: "", description: "" });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState({ status: false, message: "" });
   const dispatch = useDispatch();
   const loggedUserProjects = useSelector(
     (state) => state.loggedUserState.projects
   );
+  const loggedUser = useSelector((state) => state.loggedUserState.userName);
 
-  const handleCheked = (e) => {
-    const foundItem = goals.find((item) => item.text === e.target.value);
-    const newGoals = goals.map((obj) =>
-      obj.text === foundItem.text
-        ? { ...obj, checked: !foundItem.checked }
-        : obj
-    );
-
-    const updatedProjects = loggedUserProjects.map((project) =>
-      project.goals !== goals ? project : { ...project, goals: newGoals }
-    );
-    dispatch(updateProjects(updatedProjects));
-    updateAnimate();
+  const handleGoal = (e) => {
+    setGoal({ ...goal, [e.target.name]: e.target.value });
   };
 
-  const handleDeleteGoal = (item) => {
-    const updatedGoals = goals.filter(
-      (foundItem) => foundItem.text !== item.text
-    );
-    const updatedProjects = loggedUserProjects.map((project) =>
-      project.id === projectId ? { ...project, goals: updatedGoals } : project
-    );
-    dispatch(updateProjects(updatedProjects));
-  };
-
-  const handleGoalText = (e) => {
-    const text = e.target.value;
-    setGoal({ ...goal, text });
-  };
-
-  const addNewGoal = (e) => {
+  const addNewGoal = async (e) => {
     e.preventDefault();
-    const foundGoal = goals.find((item) => item.text === goal.text);
-    if (!foundGoal) {
-      const updatedGoals = [...goals, goal];
-      const updatedProjects = loggedUserProjects.map((project) =>
-        project.id === projectId ? { ...project, goals: updatedGoals } : project
-      );
-      dispatch(updateProjects(updatedProjects));
-      setGoal({ text: "", checked: false });
-    } else {
-      window.alert("You already have this goal");
+    setLoading(true);
+    try {
+      const response = await axios.post("user/addGoal", {
+        projectId,
+        loggedUser,
+        goal,
+      });
+
+      if (response && response.status === 200) {
+        const index = await loggedUserProjects.findIndex(
+          (project) => project._id === projectId
+        );
+        const goals = response.data;
+        setGoal({ text: "", description: "" });
+        dispatch(setGoals({ index, goals }));
+        setLoading(false);
+        error.status && setError({ ...error, status: false });
+      }
+    } catch (err) {
+      err.response
+        ? setError({ status: true, message: err.response.data })
+        : setError({
+            status: true,
+            message:
+              "No response from the server or something wrong with your internet connection",
+          });
+      setLoading(false);
     }
   };
 
@@ -86,61 +77,54 @@ const Goals = ({ goals, projectId, updateAnimate }) => {
               addNewGoal(e);
             }}
           >
-            <TextField
-              onChange={(e) => {
-                handleGoalText(e);
-              }}
-              value={goal.text}
-              sx={{ margin: "1rem 0" }}
-              color="warning"
-              fullWidth
-              label="Add some"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton type="submit" edge="end">
-                      <Check />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            ></TextField>
-          </form>
-          <List>
-            {goals.map((item, i) => (
-              <ListItem
-                sx={item.checked ? { textDecoration: "line-through" } : {}}
-                key={i}
-                secondaryAction={
-                  <Box>
-                    <Tooltip title="mark as completed" placement="left-start">
-                      <Checkbox
-                        value={item.text}
-                        edge="end"
-                        onChange={(e) => {
-                          handleCheked(e);
-                        }}
-                        checked={item.checked}
-                      />
-                    </Tooltip>
-                    <Tooltip title="delete" placement="right-start">
-                      <ButtonBase
-                        onClick={() => {
-                          handleDeleteGoal(item);
-                        }}
-                        sx={{
-                          marginLeft: "5px",
-                          "&:hover": { color: "#DD5353" },
-                        }}
-                      >
-                        <DeleteForever />
-                      </ButtonBase>
-                    </Tooltip>
-                  </Box>
+            <FormControl fullWidth>
+              <TextField
+                variant="filled"
+                name="text"
+                onChange={(e) => {
+                  handleGoal(e);
+                }}
+                value={goal.text}
+                sx={{ margin: "1rem 0 0 0" }}
+                color="warning"
+                required
+                error={error.status}
+                helperText={error.status && error.message}
+                label="Goal"
+              ></TextField>
+              <TextField
+                variant="filled"
+                name="description"
+                onChange={(e) => {
+                  handleGoal(e);
+                }}
+                value={goal.description}
+                color="warning"
+                label="Description"
+              ></TextField>
+              <RegisterFormButton
+                children={
+                  !loading ? "Add Goal" : <CircularProgress size={16} />
                 }
-              >
-                {item.text}
-              </ListItem>
+                sx={{ margin: 0 }}
+                variant="contained"
+                content={"Add goal"}
+                type="submit"
+              />
+            </FormControl>
+          </form>
+          <List sx={{ maxHeight: "320px", overflow: "auto" }}>
+            {goals.map((item) => (
+              <GoalsListItem
+                item={item}
+                id={item._id}
+                key={item._id}
+                goals={goals}
+                loggedUserProjects={loggedUserProjects}
+                projectId={projectId}
+                loggedUser={loggedUser}
+                updateAnimate={updateAnimate}
+              />
             ))}
           </List>
         </Paper>
